@@ -550,7 +550,7 @@ nobase_dist_pkgdata_DATA = \
    plug-ins/vocoder.ny \
    $(NULL)
 
-CLEANFILES = audacity$(EXEEXT) plug-ins nyquist locale
+CLEANFILES = audacity$(EXEEXT) plug-ins nyquist locale modules
 all: all-recursive
 
 .SUFFIXES:
@@ -1120,10 +1120,15 @@ uninstall-am: uninstall-binSCRIPTS uninstall-dist_docDATA \
 
 
 audacity$(EXEEXT): src/audacity$(EXEEXT)
+	rm -f audacity$(EXEEXT)
 	cp src/audacity$(EXEEXT) audacity$(EXEEXT)
 	[ -e plug-ins ] || ln -s $(srcdir)/plug-ins
 	[ -e nyquist ] || ln -s $(srcdir)/nyquist
 	[ -e locale ] || ln -s po locale
+
+modules:
+	mkdir -p modules
+	(cd lib-src/mod-nyq-bench && make) && cp -a .libs/mod-nyq-bench.so ../../modules
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
